@@ -1,5 +1,10 @@
 # Stage 1: Build application (with dependencies)
-FROM golang:alpine AS build
+FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.22.0 AS build
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /app
 
@@ -8,10 +13,10 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /app/echo .
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/echo .
 
 # Stage 2: Slim image (application binary only)
-FROM alpine AS final
+FROM --platform=${TARGETPLATFORM:-linux/amd64} scratch AS final
 
 WORKDIR /app
 

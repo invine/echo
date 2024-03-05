@@ -16,10 +16,10 @@ jobs:
       - run:
           name: Build the Docker image
           command: |
-            docker build -t public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}" .
-      - run:
-          name: Push the image to ECR (Public)
-          command: docker push public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}":latest
+            docker buildx build  --platform="linux/amd64,linux/arm64" --push -t public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}" .
+      # - run:
+      #     name: Push the image to ECR (Public)
+      #     command: docker push public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}":latest
 
 workflows:
   build-and-push:
