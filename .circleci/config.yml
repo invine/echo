@@ -5,6 +5,7 @@ jobs:
   build-and-push-image:
     docker:
       - image: cimg/base:2024.02
+      # - image: jdrouet/docker-with-buildx:stable
     steps:
       - checkout
       - aws-cli/setup:
@@ -16,10 +17,8 @@ jobs:
       - run:
           name: Build the Docker image
           command: |
-            docker buildx build  --platform="linux/amd64,linux/arm64" --push -t public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}" .
-      # - run:
-      #     name: Push the image to ECR (Public)
-      #     command: docker push public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}":latest
+            docker build --platform="linux/arm64" --push -t public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}":"${CIRCLE_SHA1}" .
+      # docker buildx build  --platform="linux/amd64,linux/arm64" --push -t public.ecr.aws/"${AWS_ECR_PUBLIC_REGISTRY_ALIAS}"/"${ECR_REPO_NAME}" .
 
 workflows:
   build-and-push:
