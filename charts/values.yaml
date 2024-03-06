@@ -1,0 +1,21 @@
+image:
+  repository: public.ecr.aws/j4w0s0n0/echo
+  tag: latest
+
+namespace: echo
+
+service:
+  port: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    # Add relevant annotations here. For example,
+    # kubernetes.io/ingress.class: your-ingress-class
+  hosts:
+    - host: my-go-app.example.com   # Replace with your desired hostname
+      paths:
+        - path: /
+          backend:
+            service: my-go-app
+            port: service.port
