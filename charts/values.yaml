@@ -12,10 +12,15 @@ ingress:
   annotations:
     # Add relevant annotations here. For example,
     # kubernetes.io/ingress.class: your-ingress-class
-  hosts:
-    - host: k8s.evernest.duckdns.org # Replace with your desired hostname
-      paths:
-        - path: /echo
-          backend:
-            service: echo-service
-            port: service.port
+  # hosts:
+  #   - host: k8s.evernest.duckdns.org # Replace with your desired hostname
+  #     paths:
+  #       - path: /echo
+  #         backend:
+  #           service: echo-service
+  #           port: service.port
+  host: k8s.evernest.duckdns.org # Replace with your desired hostname
+  path: /echo
+  backend:
+    service: echo-service
+    port: service.port

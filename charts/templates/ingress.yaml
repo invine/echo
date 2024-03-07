@@ -4,12 +4,12 @@ metadata:
   name: echo-ingres
 spec:
   rules:
-  - host: {{ .Values.ingress.hosts[0].host }}
-    http:
-      paths:
-      - path: {{ .Values.ingress.hosts[0].paths[0].path }}
-        backend:
-          service:
-            name: echo-service
-            port:
-              number: {{ .Values.service.port }}
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.path }}
+            backend:
+              service:
+                name: echo-service
+                port:
+                  number: {{ .Values.service.port }}
