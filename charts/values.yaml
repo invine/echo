@@ -19,7 +19,7 @@ ingress:
   #         backend:
   #           service: echo-service
   #           port: service.port
-  host: echo.kubernetes.default.svc # Replace with your desired hostname
+  host: echo.evercloud.duckdns.org # Replace with your desired hostname
   path: /
   backend:
     service: echo-service
