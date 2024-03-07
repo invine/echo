@@ -4,7 +4,7 @@ metadata:
   name: echo-service
   namespace: {{ .Values.namespace }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: echo-app
   ports:
