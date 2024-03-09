@@ -9,7 +9,7 @@ import (
 )
 
 func handleEchoGet(w http.ResponseWriter, r *http.Request) {
-	message := r.URL.Query().Get("msg")
+	message := r.URL.Query().Get("message")
 	if message == "" {
 		fmt.Fprintf(w, "Missing 'message' parameter.")
 		slog.Warn("received request without message", "method", "GET", "remoteAddr", r.RemoteAddr)
