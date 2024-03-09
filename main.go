@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+func handlePingGet(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "pong")
+	slog.Debug("received ping", "method", "GET", "remoteAddr", r.RemoteAddr)
+}
+
 func handleEchoGet(w http.ResponseWriter, r *http.Request) {
 	message := r.URL.Query().Get("message")
 	if message == "" {
@@ -46,6 +51,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", handleEchoGet)
 	mux.HandleFunc("POST /", handleEchoPost)
+	mux.HandleFunc("GET /ping", handlePingGet)
 	slog.Info("starting http server...")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		fmt.Println("Error serving:", err)
