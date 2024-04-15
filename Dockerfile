@@ -13,7 +13,7 @@ RUN go mod download
 
 COPY . .
 
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/echo internal/cmd
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/echo ./internal/cmd/
 
 # Stage 2: Slim image (application binary only)
 FROM --platform=${TARGETPLATFORM:-linux/amd64} scratch AS final
