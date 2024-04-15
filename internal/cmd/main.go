@@ -80,8 +80,8 @@ func setLogLevel(config *config.Config) {
 	case "error":
 		slog.SetLogLoggerLevel(slog.LevelError)
 	default:
-		slog.SetLogLoggerLevel(slog.LevelDebug)
-		slog.Warn("invalid log level, defaulting to debug", "logLevel", config.LogLevel)
+		slog.SetLogLoggerLevel(slog.LevelInfo)
+		slog.Warn("invalid log level, defaulting to info", "logLevel", config.LogLevel)
 		return
 	}
 	slog.Info("setting log level", "logLevel", config.LogLevel)
