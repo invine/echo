@@ -14,11 +14,22 @@ func handleGetEcho(w http.ResponseWriter, r *http.Request) {
 	message := r.URL.Query().Get("message")
 	if message == "" {
 		fmt.Fprintf(w, "Missing 'message' parameter.")
-		slog.Warn("received request without message", "method", "GET", "url", r.URL.String(), "remoteAddr", r.RemoteAddr)
+		slog.Warn("received request without message",
+			"method", "GET",
+			"url", r.URL.String(),
+			"remoteAddr", r.RemoteAddr,
+			"headers", r.Header,
+		)
 		return
 	}
 	fmt.Fprintf(w, "Received message (GET): %s", message)
-	slog.Debug("received message", "method", "GET", "message", message, "remoteAddr", r.RemoteAddr)
+	slog.Debug("received message",
+		"method", "GET",
+		"url", r.URL.String(),
+		"message", message,
+		"remoteAddr", r.RemoteAddr,
+		"headers", r.Header,
+	)
 }
 
 func handlePostEcho(w http.ResponseWriter, r *http.Request) {
@@ -28,24 +39,49 @@ func handlePostEcho(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(requestBodyBytes, &requestBody)
 	if err != nil {
 		fmt.Fprintf(w, "body is formatted incorrectly")
-		slog.Warn("can't parse JSON", "method", "POST", "url", r.URL.String(), "remoteAddr", r.RemoteAddr, "body", string(requestBodyBytes), "err", err)
+		slog.Warn("can't parse JSON",
+			"method", "POST",
+			"url", r.URL.String(),
+			"remoteAddr", r.RemoteAddr,
+			"body", string(requestBodyBytes),
+			"err", err,
+			"headers", r.Header,
+		)
 		return
 	}
 
 	message, ok := requestBody["message"]
 	if !ok {
 		fmt.Fprintf(w, "Missing 'message' parameter.")
-		slog.Warn("received request without message", "method", "POST", "remoteAddr", r.RemoteAddr)
+		slog.Warn("received request without message",
+			"method", "POST",
+			"url", r.URL.String(),
+			"remoteAddr", r.RemoteAddr,
+			"body", string(requestBodyBytes),
+			"headers", r.Header,
+		)
 		return
 	}
 
 	fmt.Fprintf(w, "Received message (POST): %s", message)
-	slog.Debug("received message", "method", "POST", "message", message, "remoteAddr", r.RemoteAddr)
+	slog.Debug("received message",
+		"method", "POST",
+		"url", r.URL.String(),
+		"message", message,
+		"remoteAddr", r.RemoteAddr,
+		"body", string(requestBodyBytes),
+		"headers", r.Header,
+	)
 }
 
 func handleGetPing(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "pong")
-	slog.Debug("received ping", "method", "GET", "url", r.URL.String(), "remoteAddr", r.RemoteAddr)
+	slog.Debug("received ping",
+		"method", "GET",
+		"url", r.URL.String(),
+		"remoteAddr", r.RemoteAddr,
+		"headers", r.Header,
+	)
 }
 
 func main() {
