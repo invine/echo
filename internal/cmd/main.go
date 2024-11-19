@@ -98,8 +98,8 @@ func main() {
 	httpServerMux.HandleFunc("GET /", handleGetEcho)
 	httpServerMux.HandleFunc("POST /", handlePostEcho)
 	httpServerMux.HandleFunc("GET /ping", handleGetPing)
-	slog.Info("starting http server...")
-	if err := http.ListenAndServe(":8080", httpServerMux); err != nil {
+	slog.Info("starting http server...", "port", config.Port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), httpServerMux); err != nil {
 		fmt.Println("Error serving:", err)
 	}
 }

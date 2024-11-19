@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	LogLevel string `env:"LOG_LEVEL" envDefault:"info"`
+	Port int `env:"PORT" envDefault:"8080"`
 }
 
 func NewConfig() (*Config, error) {
