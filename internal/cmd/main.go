@@ -14,7 +14,7 @@ func handleGetEcho(w http.ResponseWriter, r *http.Request) {
 	message := r.URL.Query().Get("message")
 	if message == "" {
 		fmt.Fprintf(w, "Missing 'message' parameter.")
-		slog.Warn("received request without message",
+		requestLogger(r).Warn("received request without message",
 			"method", "GET",
 			"url", r.URL.String(),
 			"remoteAddr", r.RemoteAddr,
@@ -23,7 +23,7 @@ func handleGetEcho(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Fprintf(w, "Received message (GET): %s", message)
-	slog.Debug("received message",
+	requestLogger(r).Debug("received message",
 		"method", "GET",
 		"url", r.URL.String(),
 		"message", message,
@@ -39,7 +39,7 @@ func handlePostEcho(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(requestBodyBytes, &requestBody)
 	if err != nil {
 		fmt.Fprintf(w, "body is formatted incorrectly")
-		slog.Warn("can't parse JSON",
+		requestLogger(r).Warn("can't parse JSON",
 			"method", "POST",
 			"url", r.URL.String(),
 			"remoteAddr", r.RemoteAddr,
@@ -53,7 +53,7 @@ func handlePostEcho(w http.ResponseWriter, r *http.Request) {
 	message, ok := requestBody["message"]
 	if !ok {
 		fmt.Fprintf(w, "Missing 'message' parameter.")
-		slog.Warn("received request without message",
+		requestLogger(r).Warn("received request without message",
 			"method", "POST",
 			"url", r.URL.String(),
 			"remoteAddr", r.RemoteAddr,
@@ -64,7 +64,7 @@ func handlePostEcho(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "Received message (POST): %s", message)
-	slog.Debug("received message",
+	requestLogger(r).Debug("received message",
 		"method", "POST",
 		"url", r.URL.String(),
 		"message", message,
@@ -76,7 +76,7 @@ func handlePostEcho(w http.ResponseWriter, r *http.Request) {
 
 func handleGetPing(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "pong")
-	slog.Debug("received ping",
+	requestLogger(r).Debug("received ping",
 		"method", "GET",
 		"url", r.URL.String(),
 		"remoteAddr", r.RemoteAddr,
@@ -98,8 +98,13 @@ func main() {
 	httpServerMux.HandleFunc("GET /", handleGetEcho)
 	httpServerMux.HandleFunc("POST /", handlePostEcho)
 	httpServerMux.HandleFunc("GET /ping", handleGetPing)
+	handler, err := withClientIdentity(config.TrustedProxyCIDRs, httpServerMux)
+	if err != nil {
+		slog.Error("invalid trusted proxy configuration", "err", err)
+		return
+	}
 	slog.Info("starting http server...", "port", config.Port)
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), httpServerMux); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), handler); err != nil {
 		fmt.Println("Error serving:", err)
 	}
 }

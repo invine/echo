@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	LogLevel string `env:"LOG_LEVEL" envDefault:"info"`
-	Port int `env:"PORT" envDefault:"8080"`
+	LogLevel          string   `env:"LOG_LEVEL" envDefault:"info"`
+	Port              int      `env:"PORT" envDefault:"8080"`
+	TrustedProxyCIDRs []string `env:"TRUSTED_PROXY_CIDRS" envSeparator:","`
 }
 
 func NewConfig() (*Config, error) {
